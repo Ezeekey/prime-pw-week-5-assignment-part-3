@@ -57,6 +57,20 @@ console.log(collection);
 //  Add another loop for every track with.
 //  1. {name}: {duration}
 
+function showCollection (collection) {
+    console.log(`There are ${collection.length} albums in this collection.`);
+
+    for (item of collection) {
+        console.log(`${item.title} by ${item.artist}, published in ${item.yearPublished}`);
+        for (let i = 0; i < item.tracks.length; i++) {
+            console.log(`1. ${item.tracks[i].trackName}: ${item.tracks[i].duration}`);
+        }
+    }
+}
+
+// Test.
+showCollection(collection);
+
 // TODO: Add findByArtist.
 //  Use name as parameter.
 //  Loop through collection, and add to
