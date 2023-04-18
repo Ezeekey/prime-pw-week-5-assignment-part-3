@@ -67,7 +67,7 @@ function showCollection (collection) {
         }
     }
 }
-
+console.log("Testing showCollection");
 // Test.
 showCollection(collection);
 
@@ -94,9 +94,13 @@ console.log("Expecting no albums", findByArtist("Nonexistent Ned"));
 //  If object has trackName, search only by trackName.
 //  return list of every match.
 
+console.log("Testing search");
+
 function search ( criteria ) {
+
+    let result = [];
+
     if ( criteria.trackName ) {         // Searching tracks.
-        result = [];
         for (album of collection) {
             for (song of album.tracks) {
                 if (song.trackName === criteria.trackName) {
@@ -107,7 +111,17 @@ function search ( criteria ) {
 
         return result;
     } else {                            // Search everything else.
-        return collection.filter(album => album.title === criteria.title && album.yearPublished === criteria.yearPublished);
+        result = result.concat(collection);
+        if (criteria.title) {
+            result = result.filter(album => album.title === criteria.title);
+        }
+        if (criteria.artist) {
+            result = result.filter(album => album.artist === criteria.artist);
+        }
+        if (criteria.yearPublished) {
+            result = result.filter(album => album.yearPublished === criteria.yearPublished);
+        }
+        return result;
     }
 }
 
@@ -116,3 +130,6 @@ console.log("Expecting a track", search({trackName: "Norupo"}));
 console.log("Expecting nothing", search({title: "The Sound of Perseverance", yearPublished: "3000 BC"}));
 console.log("Expecting nothing", search({title: "Nonexistant Ned's Excellent Album", yearPublished: 1998}))
 console.log("Expecting nothing", search({trackName: "Nonexistant Ned's Very Excellent Song"}));
+console.log("Expecting everything", search({}));
+console.log("Expect 2 albums", search({yearPublished: 2019}));
+console.log("Expect 2 albums", search({artist: "Primus"}));
