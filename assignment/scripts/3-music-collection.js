@@ -77,6 +77,14 @@ showCollection(collection);
 //  result array.
 //  return result.
 
+function findByArtist(name) {
+    return collection.filter(album => album.artist === name);
+}
+
+console.log(findByArtist("Machine Head"));
+console.log(findByArtist("Primus"));
+console.log(findByArtist("Nonexistent Ned"));
+
 // TODO: Create search function.
 //  Parameter is an object
 //  Has two parameter modes, it can be
