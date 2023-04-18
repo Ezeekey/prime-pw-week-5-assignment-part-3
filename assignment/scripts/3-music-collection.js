@@ -81,9 +81,9 @@ function findByArtist(name) {
     return collection.filter(album => album.artist === name);
 }
 
-console.log(findByArtist("Machine Head"));
-console.log(findByArtist("Primus"));
-console.log(findByArtist("Nonexistent Ned"));
+console.log("Expecting 1 album", findByArtist("Machine Head"));
+console.log("Expecting 2 albums" ,findByArtist("Primus"));
+console.log("Expecting no albums", findByArtist("Nonexistent Ned"));
 
 // TODO: Create search function.
 //  Parameter is an object
@@ -93,4 +93,26 @@ console.log(findByArtist("Nonexistent Ned"));
 //  trackName.
 //  If object has trackName, search only by trackName.
 //  return list of every match.
-//  if search object or property is empty, filter nothing.
+
+function search ( criteria ) {
+    if ( criteria.trackName ) {         // Searching tracks.
+        result = [];
+        for (album of collection) {
+            for (song of album.tracks) {
+                if (song.trackName === criteria.trackName) {
+                    result.push(song);
+                }
+            }
+        }
+
+        return result;
+    } else {                            // Search everything else.
+        return collection.filter(album => album.title === criteria.title && album.yearPublished === criteria.yearPublished);
+    }
+}
+
+console.log("Expecting album", search({title: "Pork Soda", yearPublished: 1993}));
+console.log("Expecting a track", search({trackName: "Norupo"}));
+console.log("Expecting nothing", search({title: "The Sound of Perseverance", yearPublished: "3000 BC"}));
+console.log("Expecting nothing", search({title: "Nonexistant Ned's Excellent Album", yearPublished: 1998}))
+console.log("Expecting nothing", search({trackName: "Nonexistant Ned's Very Excellent Song"}));
