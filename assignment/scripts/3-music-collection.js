@@ -2,18 +2,13 @@ console.log('***** Music Collection *****')
 
 const collection = [];
 
-// TODO: Add addToCollection function.
-//  Inputs are title, artist, yearPublished, and array of track objects.
-//  Track objects have {name, duration}.
-//  Create object with inputs.
-//  Push new object to collections.
-//  Return object.
 
 function addToCollection ( title, artist, yearPublished, tracks ) {
     return collection.push({title: title, artist: artist, yearPublished: yearPublished, tracks: tracks});
 }
 
-// TODO: Test addToCollection.
+
+//  Testing addToCollection
 //  Add 6 albums. Have two with same artist,
 //  two from same year
 
@@ -47,52 +42,39 @@ addToCollection("Evergreen", "After the Burial", 2019, [
     {trackName: "Exit, Exist", duration: "3:54"}
 ]);
 
+// Displaying collection to check if everything worked.
 console.log(collection);
 
-// TODO: Create showCollection.
-//  Give array parameter.
-//  Log number of items.
-//  Loop and log everything with:
-//  {title} by {artist}, published in {year}.
-//  Add another loop for every track with.
-//  1. {name}: {duration}
 
 function showCollection (collection) {
     console.log(`There are ${collection.length} albums in this collection.`);
 
-    for (item of collection) {
+    for (item of collection) {                              // Show albums
         console.log(`${item.title} by ${item.artist}, published in ${item.yearPublished}`);
-        for (let i = 0; i < item.tracks.length; i++) {
+        for (let i = 0; i < item.tracks.length; i++) {      // Show tracks in albums
             console.log(`1. ${item.tracks[i].trackName}: ${item.tracks[i].duration}`);
         }
     }
 }
+
 console.log("Testing showCollection");
+
 // Test.
 showCollection(collection);
 
-// TODO: Add findByArtist.
-//  Use name as parameter.
-//  Loop through collection, and add to
-//  result array.
-//  return result.
 
 function findByArtist(name) {
+    // Filters collection to return shallow copy array of items matching artist.
     return collection.filter(album => album.artist === name);
 }
 
+
+// Testing findByArtist
 console.log("Expecting 1 album", findByArtist("Machine Head"));
 console.log("Expecting 2 albums" ,findByArtist("Primus"));
 console.log("Expecting no albums", findByArtist("Nonexistent Ned"));
 
-// TODO: Create search function.
-//  Parameter is an object
-//  Has two parameter modes, it can be
-//  artist, year.
-//  or
-//  trackName.
-//  If object has trackName, search only by trackName.
-//  return list of every match.
+
 
 console.log("Testing search");
 
@@ -100,36 +82,37 @@ function search ( criteria ) {
 
     let result = [];
 
-    if ( criteria.trackName ) {         // Searching tracks.
-        for (album of collection) {
-            for (song of album.tracks) {
-                if (song.trackName === criteria.trackName) {
-                    result.push(song);
-                }
-            }
+    if ( criteria.trackName ) {         // Searching tracks only.
+        for (album of collection) {     // Looking through individual albums.
+            result = result.concat(album.tracks.filter(song => song.trackName === criteria.trackName));
         }
 
         return result;
     } else {                            // Search everything else.
-        result = result.concat(collection);
-        if (criteria.title) {
+        result = result.concat(collection);     // Copy full list to get filtered down.
+                                                // This will also make the function return the entire
+                                                // collection if there are no properties to search,
+                                                // and will also allow a search of just one category.
+        if (criteria.title) {           // Filter titles if there is a title property.
             result = result.filter(album => album.title === criteria.title);
         }
-        if (criteria.artist) {
+        if (criteria.artist) {          // Filter artists if there is an artist property.
             result = result.filter(album => album.artist === criteria.artist);
         }
-        if (criteria.yearPublished) {
+        if (criteria.yearPublished) {   // Filter years if there is a yearPublished property.
             result = result.filter(album => album.yearPublished === criteria.yearPublished);
         }
         return result;
     }
 }
 
-console.log("Expecting album", search({title: "Pork Soda", yearPublished: 1993}));
-console.log("Expecting a track", search({trackName: "Norupo"}));
-console.log("Expecting nothing", search({title: "The Sound of Perseverance", yearPublished: "3000 BC"}));
-console.log("Expecting nothing", search({title: "Nonexistant Ned's Excellent Album", yearPublished: 1998}))
-console.log("Expecting nothing", search({trackName: "Nonexistant Ned's Very Excellent Song"}));
-console.log("Expecting everything", search({}));
-console.log("Expect 2 albums", search({yearPublished: 2019}));
-console.log("Expect 2 albums", search({artist: "Primus"}));
+
+// Testing search
+console.log("Expecting album by searching a title and year", search({title: "Pork Soda", yearPublished: 1993}));
+console.log("Expecting a track by searching just a track", search({trackName: "Norupo"}));
+console.log("Expecting nothing searching a true title and false yearPublished", search({title: "The Sound of Perseverance", yearPublished: "3000 BC"}));
+console.log("Expecting nothing searching a false title and true year", search({title: "Nonexistent Ned's Excellent Album", yearPublished: 1998}))
+console.log("Expecting nothing searching a false track", search({trackName: "Nonexistent Ned's Very Excellent Song"}));
+console.log("Expecting everything with an empty criteria", search({}));
+console.log("Expect 2 albums by searching just a year", search({yearPublished: 2019}));
+console.log("Expect 2 albums by searching just an artist", search({artist: "Primus"}));
